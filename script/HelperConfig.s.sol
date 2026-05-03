@@ -1,7 +1,7 @@
 // SPDX-License-Identifier : MIT
 pragma solidity ^0.8.18;
 
-import {script} from "forge-std/Script.sol";
+import {Script} from "forge-std/Script.sol";
 
 contract HelperConfig {
     configAdress public activeConfigAdress;
@@ -18,12 +18,12 @@ contract HelperConfig {
         address priceFeed;
     }
 
-    function EthSepoliaConfig () public pure returns (configAdress) {
-        configAdress sepoliaAdress = configAdress({priceFeed : 0x694AA1769357215DE4FAC081bf1f309aDC325306});
+    function EthSepoliaConfig () public pure returns (configAdress memory) {
+        configAdress memory sepoliaAdress = configAdress({priceFeed : 0x694AA1769357215DE4FAC081bf1f309aDC325306});
         return sepoliaAdress;
     }
 
-    function EthAnvilConfig () public pure returns (configAdress) {
+    function EthAnvilConfig () public pure returns (configAdress memory) {
 
     }
 }
