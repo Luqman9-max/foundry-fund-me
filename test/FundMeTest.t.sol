@@ -15,7 +15,11 @@ contract FundMeTest is Test {
         fundMe = deployFundMe.run();
     }
 
-    function testMinimumDollarIsFive() public {
-        assertEq(fundMe.MINIMUM_USD(), 5e18);
+    function testMinimumDollarIsFive() public view {
+        assertEq(fundMe.MIN_USD(), 5e18);
+    }
+
+    function testOwnerIsMsgSender() public view {
+    assertEq(fundMe.owner(), msg.sender);
     }
 }
