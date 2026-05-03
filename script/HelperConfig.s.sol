@@ -2,9 +2,13 @@
 pragma solidity ^0.8.18;
 
 import {Script} from "forge-std/Script.sol";
+import {MockV3Aggregator} from "../test/mocks/MockV3Aggregator.sol";
 
-contract HelperConfig {
+contract HelperConfig is Script {
     configAdress public activeConfigAdress;
+
+    uint8 public constant DECIMAL = 8;
+    int256 public constant INITIAL_ANSWER = 2000e8;
 
     constructor () {
         if (block.chainid == 11155111) {
@@ -30,7 +34,18 @@ contract HelperConfig {
         return ethMainnet;
     }
 
-    function EthAnvilConfig () public pure returns (configAdress memory) {
+    function EthAnvilConfig () public returns (configAdress memory) {
+        if (activeConfigAdress.priceFeed != address(0)){
+            return activeConfigAdress;
+        }
+        
+        vm.startBroadcast();
+        MockV3Aggregator ethAnvilAddress = new MockV3Aggregator(DECIMAL, INITIAL_ANSWER);
+        vm.stopBroadcast();
+
+
+        configAdress memory ethAnvil = configAdress({priceFeed: address(ethAnvilAddress)});
+        return ethAnvil;
 
     }
 }
