@@ -92,20 +92,16 @@ contract FundMeTest is Test {
         }
     }
 
-        // 1. Test withdraw dengan 1 funder
     function testWithdrawWithASingleFunder() public {
-        // Arrange (Menyiapkan kondisi)
         uint256 startingOwnerBalance = fundMe.owner().balance;
         
         vm.prank(user);
         fundMe.fund{value: 1 ether}();
         uint256 fundMeBalanceAfterFund = address(fundMe).balance;
 
-        // Act (Melakukan aksi)
         vm.prank(fundMe.owner());
         fundMe.withdraw();
 
-        // Assert (Memastikan hasil)
         uint256 endingOwnerBalance = fundMe.owner().balance;
         uint256 endingFundMeBalance = address(fundMe).balance;
 
@@ -113,7 +109,6 @@ contract FundMeTest is Test {
         assertEq(startingOwnerBalance + fundMeBalanceAfterFund, endingOwnerBalance);
     }
 
-    // 2. Test withdraw dengan banyak funder (Multiple Funders)
     function testWithdrawWithMultipleFunders() public {
         // Arrange
         uint160 numberOfFunders = 10;
@@ -122,45 +117,33 @@ contract FundMeTest is Test {
             hoax(address(i), 10 ether);
             fundMe.fund{value: 1 ether}();
         }
-
         uint256 startingOwnerBalance = fundMe.owner().balance;
         uint256 startingFundMeBalance = address(fundMe).balance;
-
         // Act
         vm.prank(fundMe.owner());
         fundMe.withdraw();
-
         // Assert
         assertEq(address(fundMe).balance, 0);
         assertEq(startingOwnerBalance + startingFundMeBalance, fundMe.owner().balance);
     }
 
-    // 3. Test fungsi withdrawUser (User menarik dananya sendiri)
     function testWithdrawUserSuccess() public {
-        // Arrange
         vm.prank(user);
         fundMe.fund{value: 1 ether}();
         uint256 startingUserBalance = user.balance;
 
-        // Act
         vm.prank(user);
         fundMe.withdrawUser();
 
-        // Assert
         assertEq(fundMe.getAddressToAmountFunded(user), 0);
         assertEq(user.balance, startingUserBalance + 1 ether);
     }
 
     function testGetPriceUsdIsGreater() public view {
-    // 1. Ambil harga dari kontrak FundMe kamu
-    uint256 price = fundMe.getPriceUsd();
+        uint256 price = fundMe.getPriceUsd();
     
-    // 2. Tampilkan di console untuk debugging (opsional)
-    console.log("Harga ETH/USD saat ini (18 decimals):", price);
+        console.log("Harga ETH/USD saat ini (18 decimals):", price);
     
-    // 3. Pastikan harga lebih besar dari 0
-    // Karena ETH tidak mungkin gratis, harga harus > 0
-    assertGt(price, 0, "Harga harus lebih besar dari 0");
+        assertGt(price, 0, "Harga harus lebih besar dari 0");
     }
-
 }
