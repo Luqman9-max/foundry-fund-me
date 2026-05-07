@@ -10,10 +10,10 @@ contract FundMe {
     /*//////////////////////////////////////////////////////////////
                         CUSTOM ERRORS (WITH PARAMS)
     //////////////////////////////////////////////////////////////*/
-    error NotOwner(address caller);
-    error MinimumNotMet(uint256 sent, uint256 required);
-    error NoBalance(address user);
-    error TransferFailed(address to, uint256 amount);
+    error NotOwner();
+    error MinimumNotMet();
+    error NoBalance();
+    error TransferFailed();
 
     /*//////////////////////////////////////////////////////////////
                                 EVENTS (INDEXED)
@@ -45,13 +45,13 @@ contract FundMe {
                             MODIFIERS
     //////////////////////////////////////////////////////////////*/
     modifier onlyOwner() {
-        if (msg.sender != owner) revert NotOwner(msg.sender);
+        if (msg.sender != owner) revert NotOwner();
         _;
     }
 
     modifier hasBalance() {
         if (addressToAmountFunded[msg.sender] == 0) {
-            revert NoBalance(msg.sender);
+            revert NoBalance();
         }
         _;
     }
@@ -63,7 +63,7 @@ contract FundMe {
         uint256 usdValue = msg.value.getConversionRate(s_priceFeed);
 
         if (usdValue < MIN_USD) {
-            revert MinimumNotMet(usdValue, MIN_USD);
+            revert MinimumNotMet();
         }
 
         if (addressToAmountFunded[msg.sender] == 0) {
@@ -92,7 +92,7 @@ contract FundMe {
         uint256 balance = address(this).balance;
 
         (bool success, ) = payable(owner).call{value: balance}("");
-        if (!success) revert TransferFailed(owner, balance);
+        if (!success) revert TransferFailed();
 
         emit OwnerWithdraw(owner, balance);
     }
@@ -106,7 +106,7 @@ contract FundMe {
         addressToAmountFunded[msg.sender] = 0;
 
         (bool success, ) = payable(msg.sender).call{value: amount}("");
-        if (!success) revert TransferFailed(msg.sender, amount);
+        if (!success) revert TransferFailed();
 
         emit Withdrawn(msg.sender, amount);
     }
