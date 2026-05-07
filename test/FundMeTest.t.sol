@@ -150,4 +150,17 @@ contract FundMeTest is Test {
         assertEq(fundMe.getAddressToAmountFunded(user), 0);
         assertEq(user.balance, startingUserBalance + 1 ether);
     }
+
+    function testGetPriceUsdIsGreater() public view {
+    // 1. Ambil harga dari kontrak FundMe kamu
+    uint256 price = fundMe.getPriceUsd();
+    
+    // 2. Tampilkan di console untuk debugging (opsional)
+    console.log("Harga ETH/USD saat ini (18 decimals):", price);
+    
+    // 3. Pastikan harga lebih besar dari 0
+    // Karena ETH tidak mungkin gratis, harga harus > 0
+    assertGt(price, 0, "Harga harus lebih besar dari 0");
+    }
+
 }

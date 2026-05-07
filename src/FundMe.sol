@@ -6,6 +6,8 @@ import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/shared/interf
 
 contract FundMe {
     using PriceConverter for uint256;
+    using PriceConverter for AggregatorV3Interface;
+
 
     /*//////////////////////////////////////////////////////////////
                         CUSTOM ERRORS (WITH PARAMS)
@@ -124,5 +126,9 @@ contract FundMe {
 
     function getVersion () public view returns (uint256) {
         return s_priceFeed.version();
+    }
+
+    function getPriceUsd () public view returns (uint256) {
+        return s_priceFeed.getPrice();
     }
 }
